@@ -246,12 +246,13 @@ export default class CronService {
         cmdStr = `${cmdStr} now`;
       }
 
-      const cp = spawn(cmdStr, { shell: '/bin/bash' });
+      const cp = spawn(cmdStr, { shell: '/bin/bash', detached: true });
       this.cronDb.update(
         { _id },
         { $set: { status: CrontabStatus.running, pid: cp.pid } },
       );
       cp.on('close', (code) => {
+        this.logger.info(`进程${cp.pid} closed`);
         this.cronDb.update(
           { _id },
           { $set: { status: CrontabStatus.idle }, $unset: { pid: true } },

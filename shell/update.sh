@@ -285,10 +285,9 @@ update_qinglong() {
         rm -rf $dir_root/build && rm -rf $dir_root/dist
         cp -rf $ql_static_repo/* $dir_root
         if [[ $no_restart != "no-restart" ]]; then
-            echo -e "重启面板中..."
             nginx -s reload 2>/dev/null || nginx -c /etc/nginx/nginx.conf
-            sleep 1
             reload_pm2
+            echo -e "重启面板中..."
         fi
     else
         echo -e "\n更新$dir_root失败，请检查原因...\n"
